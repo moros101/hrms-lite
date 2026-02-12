@@ -16,7 +16,7 @@ def env(key: str, default=None):
 
 SECRET_KEY = env("DJANGO_SECRET_KEY", "dev-secret-key-change-me")
 DEBUG = env("DJANGO_DEBUG", "1") == "1"
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'https://hrms-lite-production-591d.up.railway.app']   
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'hrms-lite-production-591d.up.railway.app']   
 
 
 INSTALLED_APPS = [
