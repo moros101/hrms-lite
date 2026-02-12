@@ -4,8 +4,8 @@
 HRMS Lite is a lightweight HR management tool to add/delete employees and mark/view daily attendance.
 
 ## Live Demo
-- Frontend: https://your-frontend-url
-- Backend API: https://your-backend-url/api/
+- Frontend: https://hrms-lite-ovz0esm5p-moros101s-projects.vercel.app/
+- Backend API: https://hrms-lite-production-591d.up.railway.app/api/
 
 ## Tech stack
 - Frontend: React (Create React App)
@@ -17,7 +17,7 @@ HRMS Lite is a lightweight HR management tool to add/delete employees and mark/v
 - Add / view / delete employees
 - Mark attendance (date + status)
 - View attendance per employee
-- (Bonus) Filter attendance by date, total present days per employee, basic dashboard
+- Filter attendance by date, total present days per employee, basic dashboard
 
 ## Getting started (local)
 ### Prereqs
