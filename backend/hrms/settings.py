@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -15,7 +16,7 @@ def env(key: str, default=None):
 
 SECRET_KEY = env("DJANGO_SECRET_KEY", "dev-secret-key-change-me")
 DEBUG = env("DJANGO_DEBUG", "1") == "1"
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'hrms-lite-production-591d.up.railway.app']   
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'https://hrms-lite-production-591d.up.railway.app']   
 
 
 INSTALLED_APPS = [
@@ -60,8 +61,20 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "hrms.wsgi.application"
 
-DATABASES = {
-    "default": {
+# Database
+# - If DATABASE_URL is set (e.g. Railway/Heroku), use that.
+# - Otherwise fall back to local Postgres using .env values.
+DATABASES = {}
+
+database_url = os.environ.get("DATABASE_URL")
+if database_url:
+    DATABASES["default"] = dj_database_url.parse(
+        database_url,
+        conn_max_age=600,
+        ssl_require=not DEBUG,
+    )
+else:
+    DATABASES["default"] = {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": env("POSTGRES_DB", "hrms_lite"),
         "USER": env("POSTGRES_USER", "postgres"),
@@ -69,7 +82,6 @@ DATABASES = {
         "HOST": env("POSTGRES_HOST", "localhost"),
         "PORT": env("POSTGRES_PORT", "5432"),
     }
-}
 
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"

@@ -11,7 +11,18 @@ export default function EmployeeList({ onSelect }) {
     setLoading(true);
     try {
       const res = await api.get('/employees/');
-      setEmployees(res.data);
+      const data = res.data;
+      // Defensive: ensure we always end up with an array here
+      if (Array.isArray(data)) {
+        setEmployees(data);
+      } else if (data && Array.isArray(data.results)) {
+        // Support for paginated responses: { results: [...] }
+        setEmployees(data.results);
+      } else {
+        console.warn('Unexpected /employees/ payload, expected array:', data);
+        setEmployees([]);
+        setError('Unexpected response from server.');
+      }
     } catch (e) {
       setError('Failed to load employees');
     } finally {
@@ -37,9 +48,9 @@ export default function EmployeeList({ onSelect }) {
       <EmployeeForm onAdded={fetch}/>
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}
-      {!loading && employees.length===0 && <p>No employees yet.</p>}
+      {!loading && Array.isArray(employees) && employees.length===0 && <p>No employees yet.</p>}
       <ul className="employee-list">
-        {employees.map(e => (
+        {Array.isArray(employees) && employees.map(e => (
           <li key={e.id} className="employee-item">
             <div className="employee-meta" onClick={() => onSelect && onSelect(e.id)}>
               <span className="employee-name">
