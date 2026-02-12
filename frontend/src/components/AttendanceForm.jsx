@@ -4,6 +4,7 @@ import api from '../api';
 export default function AttendanceForm() {
   const [employees, setEmployees] = useState([]);
   const [form, setForm] = useState({ employee: '', date: '', status: 'P' });
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     api.get('/employees/')
@@ -24,8 +25,17 @@ export default function AttendanceForm() {
       });
   }, []);
 
+  const validate = () => {
+    const next = {};
+    if (!form.employee) next.employee = 'Please select an employee';
+    if (!form.date) next.date = 'Date is required';
+    setErrors(next);
+    return Object.keys(next).length === 0;
+  };
+
   const submit = async (e) => {
     e.preventDefault();
+    if (!validate()) return;
     try {
       await api.post('/attendances/', form);
       alert('Attendance marked');
@@ -46,7 +56,9 @@ export default function AttendanceForm() {
             </option>
           ))}
       </select>
+      {errors.employee && <small className="text-muted">{errors.employee}</small>}
       <input required type="date" value={form.date} onChange={e=>setForm({...form, date:e.target.value})}/>
+      {errors.date && <small className="text-muted">{errors.date}</small>}
       <select value={form.status} onChange={e=>setForm({...form, status:e.target.value})}>
         <option value="P">Present</option>
         <option value="A">Absent</option>
